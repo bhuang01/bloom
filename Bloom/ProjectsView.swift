@@ -8,7 +8,89 @@ struct Project: Identifiable {
     let description: String
 }
 
+//import FirebaseFirestore
+//
+//struct Project: Identifiable {
+//    let title: String
+//    let description: String
+//    let startDate: Date
+//    let endDate: Date
+//    let dataRequirements: String
+//    let studyType: String
+//    let rewardAmount: String
+//}
+//
+//func parseProjectData(data: [String: Any]) -> Project? {
+//    guard let title = data["title"] as? String,
+//          let description = data["description"] as? String,
+//          let startDateString = data["startDate"] as? String,
+//          let endDateString = data["endDate"] as? String,
+//          let dataRequirements = data["dataRequirements"] as? String,
+//          let studyType = data["studyType"] as? String,
+//          let rewardAmount = data["rewardAmount"] as? String,
+//          let startDate = ISO8601DateFormatter().date(from: startDateString),
+//          let endDate = ISO8601DateFormatter().date(from: endDateString) else {
+//        print("Error parsing project data: Missing required fields or date conversion failed.")
+//        return nil
+//    }
+//
+//    return Project(
+//        title: title,
+//        description: description,
+//        startDate: startDate,
+//        endDate: endDate,
+//        dataRequirements: dataRequirements,
+//        studyType: studyType,
+//        rewardAmount: rewardAmount
+//    )
+//}
+//
+//func fetchAllProjects(completion: @escaping ([Project]) -> Void) {
+//    let db = Firestore.firestore()
+//    let projectsCollection = db.collection("projects")
+//    
+//    projectsCollection.getDocuments { (querySnapshot, error) in
+//        var projects = [Project]()
+//        
+//        if let error = error {
+//            print("Error fetching projects: \(error.localizedDescription)")
+//            completion(projects)
+//        } else {
+//            guard let documents = querySnapshot?.documents else {
+//                print("No documents found.")
+//                completion(projects)
+//                return
+//            }
+//            
+//            for document in documents {
+//                let data = document.data()
+//                
+//                if let project = parseProjectData(data: data) {
+//                    projects.append(project)
+//                }
+//            }
+//            
+//            completion(projects)
+//        }
+//    }
+//}
+
+//fetchAllProjects { projects in
+//    for project in projects {
+//        print("Title: \(project.title)")
+//        print("Description: \(project.description)")
+//        print("Date: \(project.startDate)")
+//        print("End Date: \(project.endDate)")
+//        print("Data Requirements: \(project.dataRequirements)")
+//        print("Study Type: \(project.studyType)")
+//        print("Reward Amount: \(project.rewardAmount)\n")
+//    }
+//}
+
+
 struct ProjectsView: View {
+    @EnvironmentObject var viewModel: AuthViewModel
+
     // gradient
     private let titleGradient = LinearGradient(
         colors: [.blue, .purple],
@@ -34,20 +116,41 @@ struct ProjectsView: View {
     ]
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    GradientText(
-                        text: "Research",
-                        gradient: titleGradient
-                    )
-                    .padding(.top)
-                    
-                    ForEach(projects) { project in
-                        ProjectCard(project: project)
+        if let user = viewModel.currentUser {
+            NavigationView {
+                ScrollView {
+                    VStack(spacing: 20) {
+                        GradientText(
+                            text: "Research",
+                            gradient: titleGradient
+                        )
+                        .padding(.top)
+                        
+                        ForEach(projects) { project in
+                            ProjectCard(project: project)
+                        }
+                        
+                        // Account Section
+                        Section("Account") {
+                            Button {
+                                viewModel.signOut()
+                            } label: {
+                                SettingsRowView(imageName: "arrow.left.circle.fill",
+                                                title: "Sign Out",
+                                                tintColor: .red)
+                            }
+                            
+                            Button {
+                                print("Delete account...")
+                            } label: {
+                                SettingsRowView(imageName: "xmark.circle.fill",
+                                                title: "Delete Account",
+                                                tintColor: .red)
+                            }
+                        }
                     }
+                    .padding()
                 }
-                .padding()
             }
         }
     }
@@ -55,7 +158,6 @@ struct ProjectsView: View {
 
 struct ProjectCard: View {
     let project: Project
-    
     @State private var dataSubmitted = false
     @State private var showingSubmitAlert = false
     @StateObject private var healthKitManager = HealthKitManager()

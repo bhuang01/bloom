@@ -5,6 +5,7 @@
 //  Created by Bryan Huang on 11/10/24.
 //
 
+import Firebase
 import Foundation
 import HealthKit
 
@@ -56,7 +57,7 @@ class HealthKitManager: ObservableObject {
     let healthStore = HKHealthStore()
     
     // Firestore database
-//    let db = Firestore.firestore()
+    let db = Firestore.firestore()
     
     @Published var isAuthorized = false
     @Published var heartRate: Double = 0
@@ -94,22 +95,52 @@ class HealthKitManager: ObservableObject {
             HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)!,
             HKObjectType.quantityType(forIdentifier: .bloodGlucose)!,
             
-            // Personal Information (requires permission)
+//            // Personal Information (requires permission)
             HKObjectType.characteristicType(forIdentifier: .bloodType)!,
             HKObjectType.characteristicType(forIdentifier: .biologicalSex)!,
             HKObjectType.characteristicType(forIdentifier: .dateOfBirth)!
         ]
 
         
-        healthStore.requestAuthorization(toShare: nil, read: typesToRead) { (success, error) in
-            DispatchQueue.main.async {
-                self.isAuthorized = success
-                if success {
-                    self.fetchHealthData()
-                }
-            }
-        }
+//        healthStore.requestAuthorization(toShare: nil, read: typesToRead) { (success, error) in
+//            DispatchQueue.main.async {
+//                self.isAuthorized = success
+//                if success {
+//                    self.fetchHealthData()
+//                }
+//            }
+//        }
     }
+    
+//    func fetchPersonalInfo() {
+//        do {
+//            if HKHealthStore.isHealthDataAvailable() {
+//                // Check authorization status for blood type
+//                let bloodTypeStatus = healthStore.authorizationStatus(for: HKObjectType.characteristicType(forIdentifier: .bloodType)!)
+//                if bloodTypeStatus == .sharingAuthorized {
+//                    let bloodType = try healthStore.bloodType().bloodType
+//                    // Use bloodType as needed
+//                }
+//
+//                // Check authorization status for biological sex
+//                let biologicalSexStatus = healthStore.authorizationStatus(for: HKObjectType.characteristicType(forIdentifier: .biologicalSex)!)
+//                if biologicalSexStatus == .sharingAuthorized {
+//                    let biologicalSex = try healthStore.biologicalSex().biologicalSex
+//                    // Use biologicalSex as needed
+//                }
+//
+//                // Check authorization status for date of birth
+//                let dateOfBirthStatus = healthStore.authorizationStatus(for: HKObjectType.characteristicType(forIdentifier: .dateOfBirth)!)
+//                if dateOfBirthStatus == .sharingAuthorized {
+//                    let dateOfBirthComponents = try healthStore.dateOfBirthComponents()
+//                    // Use dateOfBirthComponents as needed
+//                }
+//            }
+//        } catch {
+//            print("Error fetching personal info: \(error)")
+//        }
+//    }
+
     
     // POST to Firebase Firestore
     func pushHealthDataToFirestore() {
@@ -131,17 +162,15 @@ class HealthKitManager: ObservableObject {
             "dateOfBirth": self.dateOfBirth?.description ?? "Unknown"
         ]
         
-        // Reference to the "HealthData" collection
-//        let healthDataRef = db.collection("HealthData").document(UUID().uuidString)
-        
-        // Set the health data to Firestore
-//        healthDataRef.setData(healthData) { error in
-//            if let error = error {
-//                print("Error adding health data to Firestore: \(error.localizedDescription)")
-//            } else {
-//                print("Health data successfully added to Firestore!")
-//            }
-//        }
+        // send to firestore db
+        let healthDataRef = db.collection("HealthData").document(UUID().uuidString)
+        healthDataRef.setData(healthData) { error in
+            if let error = error {
+                print("Error adding health data to Firestore: \(error.localizedDescription)")
+            } else {
+                print("Health data successfully added to Firestore!")
+            }
+        }
     }
     
     // Fetch the health data from HealthKit
