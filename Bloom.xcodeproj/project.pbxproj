@@ -221,7 +221,10 @@
 			mainGroup = 93C336192CE0932B001F4420;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+<<<<<<< HEAD
 				0BAEE0B42CE1153000458DAF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+=======
+>>>>>>> da6c6afd0c58fa6293d79966d81be41a4153d37a
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 93C336232CE0932B001F4420 /* Products */;
@@ -427,13 +430,18 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Bloom/Preview Content\"";
 				DEVELOPMENT_TEAM = N4B724JBGT;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/Bloom/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+<<<<<<< HEAD
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+>>>>>>> da6c6afd0c58fa6293d79966d81be41a4153d37a
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -458,13 +466,18 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Bloom/Preview Content\"";
 				DEVELOPMENT_TEAM = N4B724JBGT;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/Bloom/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+<<<<<<< HEAD
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+>>>>>>> da6c6afd0c58fa6293d79966d81be41a4153d37a
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

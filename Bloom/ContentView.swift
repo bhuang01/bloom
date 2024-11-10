@@ -1,29 +1,27 @@
-//
-//  ContentView.swift
-//  Bloom
-//
-//  Created by Bryan Huang on 11/9/24.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: AuthViewModel
+    @State private var selectedTab: Tab = .dashboard
+    
+    enum Tab {
+        case dashboard, profile
+    }
 
     var body: some View {
         Group {
             if viewModel.userSession != nil {
-                TabView {
+                TabView() {
                     DashboardView()
                         .tabItem {
-                            Image(systemName: "house.fill")
-                            Text("Dashboard")
-                        }
-
-                    ProfileView()
-                        .tabItem {
                             Image(systemName: "person.fill")
-                            Text("Profile")
+                            Text("My Health")
+                        }
+                    
+                    ProjectsView()
+                        .tabItem {
+                            Image(systemName: "tray.full.fill")
+                            Text("Research")
                         }
                 }
             } else {
