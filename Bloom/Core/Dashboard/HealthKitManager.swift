@@ -60,10 +60,10 @@ class HealthKitManager: ObservableObject {
     let db = Firestore.firestore()
     
     @Published var isAuthorized = false
-    @Published var heartRate: Double = 0
-    @Published var stepCount: Int = 0
-    @Published var height: Double = 0
-    @Published var bodyMass: Double = 0
+    @Published var heartRate: Double = 60
+    @Published var stepCount: Int = 2479
+    @Published var height: Double = 1.57
+    @Published var bodyMass: Double = 55
     @Published var bodyMassIndex: Double = 0
     @Published var leanBodyMass: Double = 0
     @Published var bodyFatPercentage: Double = 0
@@ -74,9 +74,13 @@ class HealthKitManager: ObservableObject {
 //    @Published var inhalerUsage: Bool = false
     
     // Characteristics
-    @Published var bloodType: HKBloodType = .notSet
-    @Published var biologicalSex: HKBiologicalSex = .notSet
-    @Published var dateOfBirth: Date?
+//    @Published var bloodType: HKBloodType = .notSet
+//    @Published var biologicalSex: HKBiologicalSex = .notSet
+//    @Published var dateOfBirth: Date?
+    @Published var bloodType: String = "A+"
+    @Published var biologicalSex: String = "Female"
+    @Published var dateOfBirth: String = "June 4, 2003"
+
     
     func requestAuthorization() {
         let typesToRead: Set<HKObjectType> = [
@@ -157,9 +161,12 @@ class HealthKitManager: ObservableObject {
             "systolicBloodPressure": self.systolicBloodPressure,
             "diastolicBloodPressure": self.diastolicBloodPressure,
             "bloodGlucose": self.bloodGlucose,
-            "bloodType": self.bloodType.stringValue(),
-            "biologicalSex": self.biologicalSex.stringValue(),
-            "dateOfBirth": self.dateOfBirth?.description ?? "Unknown"
+//            "bloodType": self.bloodType.stringValue(),
+//            "biologicalSex": self.biologicalSex.stringValue(),
+//            "dateOfBirth": self.dateOfBirth?.description ?? "Unknown"
+            "bloodType": self.bloodType,
+            "biologicalSex": self.biologicalSex,
+            "dateOfBirth": self.dateOfBirth
         ]
         
         // send to firestore db
@@ -175,10 +182,10 @@ class HealthKitManager: ObservableObject {
     
     // Fetch the health data from HealthKit
     func fetchHealthData() {
-        fetchHeartRate()
-        fetchStepCount()
-        fetchHeight()
-        fetchBodyMass()
+//        fetchHeartRate()
+//        fetchStepCount()
+//        fetchHeight()
+//        fetchBodyMass()
         fetchBodyMassIndex()
         fetchLeanBodyMass()
         fetchBodyFatPercentage()
@@ -191,53 +198,53 @@ class HealthKitManager: ObservableObject {
     }
     
     // Fetch Heart Rate
-    func fetchHeartRate() {
-        let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
-        let query = HKSampleQuery(sampleType: heartRateType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
-            DispatchQueue.main.async {
-                self.heartRate = result.quantity.doubleValue(for: heartRateUnit)
-            }
-        }
-        healthStore.execute(query)
-    }
+//    func fetchHeartRate() {
+//        let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
+//        let query = HKSampleQuery(sampleType: heartRateType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
+//            DispatchQueue.main.async {
+//                self.heartRate = result.quantity.doubleValue(for: heartRateUnit)
+//            }
+//        }
+//        healthStore.execute(query)
+//    }
     
     // Fetch Step Count
-    func fetchStepCount() {
-        let stepCountType = HKObjectType.quantityType(forIdentifier: .stepCount)!
-        let query = HKSampleQuery(sampleType: stepCountType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.stepCount = Int(result.quantity.doubleValue(for: .count()))
-            }
-        }
-        healthStore.execute(query)
-    }
+//    func fetchStepCount() {
+//        let stepCountType = HKObjectType.quantityType(forIdentifier: .stepCount)!
+//        let query = HKSampleQuery(sampleType: stepCountType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.stepCount = Int(result.quantity.doubleValue(for: .count()))
+//            }
+//        }
+//        healthStore.execute(query)
+//    }
 
     // Fetch Height
-    func fetchHeight() {
-        let heightType = HKObjectType.quantityType(forIdentifier: .height)!
-        let query = HKSampleQuery(sampleType: heightType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.height = result.quantity.doubleValue(for: .meter())
-            }
-        }
-        healthStore.execute(query)
-    }
+//    func fetchHeight() {
+//        let heightType = HKObjectType.quantityType(forIdentifier: .height)!
+//        let query = HKSampleQuery(sampleType: heightType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.height = result.quantity.doubleValue(for: .meter())
+//            }
+//        }
+//        healthStore.execute(query)
+//    }
     
     // Fetch Body Mass
-    func fetchBodyMass() {
-        let bodyMassType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
-        let query = HKSampleQuery(sampleType: bodyMassType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.bodyMass = result.quantity.doubleValue(for: .gramUnit(with: .kilo))
-            }
-        }
-        healthStore.execute(query)
-    }
+//    func fetchBodyMass() {
+//        let bodyMassType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
+//        let query = HKSampleQuery(sampleType: bodyMassType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.bodyMass = result.quantity.doubleValue(for: .gramUnit(with: .kilo))
+//            }
+//        }
+//        healthStore.execute(query)
+//    }
     
     // Fetch Body Mass Index (BMI)
     func fetchBodyMassIndex() {
@@ -251,7 +258,7 @@ class HealthKitManager: ObservableObject {
 //        healthStore.execute(query)
         
         // Fake data as placeholder
-        let fakeBMI = 25.5
+        let fakeBMI = 22.5
         DispatchQueue.main.async {
             self.bodyMassIndex = fakeBMI
         }
@@ -268,7 +275,7 @@ class HealthKitManager: ObservableObject {
 //        }
 //        healthStore.execute(query)
         
-        let fakeLeanBodyMass = 63.5
+        let fakeLeanBodyMass = 37.5
         DispatchQueue.main.async {
             self.leanBodyMass = fakeLeanBodyMass
         }
@@ -285,7 +292,7 @@ class HealthKitManager: ObservableObject {
 //        }
 //        healthStore.execute(query)
         
-        let fakeBodyFatPercentage = 19.2
+        let fakeBodyFatPercentage = 14.2
         DispatchQueue.main.async {
             self.bodyFatPercentage = fakeBodyFatPercentage
         }
@@ -358,37 +365,50 @@ class HealthKitManager: ObservableObject {
     
     // Fetch Biological Sex
     func fetchBiologicalSex() {
-        do {
-            let biologicalSex = try healthStore.biologicalSex()
-            DispatchQueue.main.async {
-                self.biologicalSex = biologicalSex.biologicalSex
-            }
-        } catch {
-            print("Error fetching biological sex: \(error.localizedDescription)")
+//        do {
+//            let biologicalSex = try healthStore.biologicalSex()
+//            DispatchQueue.main.async {
+//                self.biologicalSex = biologicalSex.biologicalSex
+//            }
+//        } catch {
+//            print("Error fetching biological sex: \(error.localizedDescription)")
+//        }
+        let fakeBiologicalSex = "Female"
+        DispatchQueue.main.async {
+            self.biologicalSex = fakeBiologicalSex
         }
+        
     }
     
     // Fetch Date of Birth
     func fetchDateOfBirth() {
-        do {
-            let dateOfBirthComponents = try healthStore.dateOfBirthComponents()
-            DispatchQueue.main.async {
-                self.dateOfBirth = Calendar.current.date(from: dateOfBirthComponents)
-            }
-        } catch {
-            print("Error fetching date of birth: \(error.localizedDescription)")
+//        do {
+//            let dateOfBirthComponents = try healthStore.dateOfBirthComponents()
+//            DispatchQueue.main.async {
+//                self.dateOfBirth = Calendar.current.date(from: dateOfBirthComponents)
+//            }
+//        } catch {
+//            print("Error fetching date of birth: \(error.localizedDescription)")
+//        }
+        let fakeDoB = "June 4, 2003"
+        DispatchQueue.main.async {
+            self.dateOfBirth = fakeDoB
         }
     }
     
     // Fetch Blood Type
     func fetchBloodType() {
-        do {
-            let bloodType = try healthStore.bloodType()
-            DispatchQueue.main.async {
-                self.bloodType = bloodType.bloodType
-            }
-        } catch {
-            print("Error fetching blood type: \(error.localizedDescription)")
+//        do {
+//            let bloodType = try healthStore.bloodType()
+//            DispatchQueue.main.async {
+//                self.bloodType = bloodType.bloodType
+//            }
+//        } catch {
+//            print("Error fetching blood type: \(error.localizedDescription)")
+//        }
+        let fakeBloodType = "A+"
+        DispatchQueue.main.async {
+            self.bloodType = fakeBloodType
         }
     }
     

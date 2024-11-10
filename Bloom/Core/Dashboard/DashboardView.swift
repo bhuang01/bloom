@@ -186,11 +186,12 @@ struct DashboardView: View {
                     // Personal Information Section
                     GroupBox(label: Label("Personal Information", systemImage: "person.fill")) {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Blood Type: \(healthKitManager.bloodType.stringValue())")
-                            Text("Biological Sex: \(healthKitManager.biologicalSex.stringValue())")
-                            if let dateOfBirth = healthKitManager.dateOfBirth {
-                                Text("Date of Birth: \(dateOfBirth, formatter: dateFormatter)")
-                            }
+                            Text("Blood Type: \(healthKitManager.bloodType)")
+                            Text("Biological Sex: \(healthKitManager.biologicalSex)")
+                            Text("Date of Birth: \(healthKitManager.dateOfBirth)")
+//                            if let dateOfBirth = healthKitManager.dateOfBirth {
+//                                Text("Date of Birth: \(dateOfBirth, formatter: dateFormatter)")
+//                            }
                         }
                         .padding(.vertical, 8)
                     }
