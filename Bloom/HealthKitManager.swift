@@ -5,6 +5,7 @@
 //  Created by Bryan Huang on 11/10/24.
 //
 
+import FirebaseFirestore
 import Foundation
 import HealthKit
 
@@ -55,6 +56,9 @@ extension HKBloodType {
 class HealthKitManager: ObservableObject {
     let healthStore = HKHealthStore()
     
+    // Firestore database
+    let db = Firestore.firestore()
+    
     @Published var isAuthorized = false
     @Published var heartRate: Double = 0
     @Published var stepCount: Int = 0
@@ -104,6 +108,39 @@ class HealthKitManager: ObservableObject {
                 if success {
                     self.fetchHealthData()
                 }
+            }
+        }
+    }
+    
+    // POST to Firebase Firestore
+    func pushHealthDataToFirestore() {
+        // dict to hold data
+        let healthData: [String: Any] = [
+            "heartRate": self.heartRate,
+            "stepCount": self.stepCount,
+            "height": self.height,
+            "bodyMass": self.bodyMass,
+            "bodyMassIndex": self.bodyMassIndex,
+            "leanBodyMass": self.leanBodyMass,
+            "bodyFatPercentage": self.bodyFatPercentage,
+            "waistCircumference": self.waistCircumference,
+            "systolicBloodPressure": self.systolicBloodPressure,
+            "diastolicBloodPressure": self.diastolicBloodPressure,
+            "bloodGlucose": self.bloodGlucose,
+            "bloodType": self.bloodType.stringValue(),
+            "biologicalSex": self.biologicalSex.stringValue(),
+            "dateOfBirth": self.dateOfBirth?.description ?? "Unknown"
+        ]
+        
+        // Reference to the "HealthData" collection
+        let healthDataRef = db.collection("HealthData").document(UUID().uuidString)
+        
+        // Set the health data to Firestore
+        healthDataRef.setData(healthData) { error in
+            if let error = error {
+                print("Error adding health data to Firestore: \(error.localizedDescription)")
+            } else {
+                print("Health data successfully added to Firestore!")
             }
         }
     }
@@ -176,86 +213,119 @@ class HealthKitManager: ObservableObject {
     
     // Fetch Body Mass Index (BMI)
     func fetchBodyMassIndex() {
-        let bmiType = HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!
-        let query = HKSampleQuery(sampleType: bmiType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.bodyMassIndex = result.quantity.doubleValue(for: .count())
-            }
+//        let bmiType = HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!
+//        let query = HKSampleQuery(sampleType: bmiType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.bodyMassIndex = result.quantity.doubleValue(for: .count())
+//            }
+//        }
+//        healthStore.execute(query)
+        
+        // Fake data as placeholder
+        let fakeBMI = 25.5
+        DispatchQueue.main.async {
+            self.bodyMassIndex = fakeBMI
         }
-        healthStore.execute(query)
     }
     
     // Fetch Lean Body Mass
     func fetchLeanBodyMass() {
-        let leanBodyMassType = HKObjectType.quantityType(forIdentifier: .leanBodyMass)!
-        let query = HKSampleQuery(sampleType: leanBodyMassType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.leanBodyMass = result.quantity.doubleValue(for: .gramUnit(with: .kilo))
-            }
+//        let leanBodyMassType = HKObjectType.quantityType(forIdentifier: .leanBodyMass)!
+//        let query = HKSampleQuery(sampleType: leanBodyMassType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.leanBodyMass = result.quantity.doubleValue(for: .gramUnit(with: .kilo))
+//            }
+//        }
+//        healthStore.execute(query)
+        
+        let fakeLeanBodyMass = 63.5
+        DispatchQueue.main.async {
+            self.leanBodyMass = fakeLeanBodyMass
         }
-        healthStore.execute(query)
     }
     
     // Fetch Body Fat Percentage
     func fetchBodyFatPercentage() {
-        let bodyFatType = HKObjectType.quantityType(forIdentifier: .bodyFatPercentage)!
-        let query = HKSampleQuery(sampleType: bodyFatType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.bodyFatPercentage = result.quantity.doubleValue(for: .percent())
-            }
+//        let bodyFatType = HKObjectType.quantityType(forIdentifier: .bodyFatPercentage)!
+//        let query = HKSampleQuery(sampleType: bodyFatType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.bodyFatPercentage = result.quantity.doubleValue(for: .percent())
+//            }
+//        }
+//        healthStore.execute(query)
+        
+        let fakeBodyFatPercentage = 19.2
+        DispatchQueue.main.async {
+            self.bodyFatPercentage = fakeBodyFatPercentage
         }
-        healthStore.execute(query)
     }
 
     // Fetch Waist Circumference
     func fetchWaistCircumference() {
-        let waistCircumferenceType = HKObjectType.quantityType(forIdentifier: .waistCircumference)!
-        let query = HKSampleQuery(sampleType: waistCircumferenceType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.waistCircumference = result.quantity.doubleValue(for: .meter())
-            }
+//        let waistCircumferenceType = HKObjectType.quantityType(forIdentifier: .waistCircumference)!
+//        let query = HKSampleQuery(sampleType: waistCircumferenceType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.waistCircumference = result.quantity.doubleValue(for: .meter())
+//            }
+//        }
+//        healthStore.execute(query)
+        
+        let fakeWaistCircumference = 0.34
+        DispatchQueue.main.async {
+            self.waistCircumference = fakeWaistCircumference
         }
-        healthStore.execute(query)
     }
 
     // Fetch Blood Pressure
     func fetchBloodPressure() {
-        let systolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic)!
-        let diastolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)!
+//        let systolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic)!
+//        let diastolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)!
+//        
+//        let systolicQuery = HKSampleQuery(sampleType: systolicType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.systolicBloodPressure = result.quantity.doubleValue(for: .millimeterOfMercury())
+//            }
+//        }
+//        
+//        let diastolicQuery = HKSampleQuery(sampleType: diastolicType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            DispatchQueue.main.async {
+//                self.diastolicBloodPressure = result.quantity.doubleValue(for: .millimeterOfMercury())
+//            }
+//        }
+//        
+//        healthStore.execute(systolicQuery)
+//        healthStore.execute(diastolicQuery)
         
-        let systolicQuery = HKSampleQuery(sampleType: systolicType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.systolicBloodPressure = result.quantity.doubleValue(for: .millimeterOfMercury())
-            }
+        let fakeSystolicBloodPressure = 120.0
+        let fakeDiastolicBloodPressure = 80.0
+        DispatchQueue.main.async {
+            self.systolicBloodPressure = fakeSystolicBloodPressure
+            self.diastolicBloodPressure = fakeDiastolicBloodPressure
         }
-        
-        let diastolicQuery = HKSampleQuery(sampleType: diastolicType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            DispatchQueue.main.async {
-                self.diastolicBloodPressure = result.quantity.doubleValue(for: .millimeterOfMercury())
-            }
-        }
-        
-        healthStore.execute(systolicQuery)
-        healthStore.execute(diastolicQuery)
     }
     
     // Fetch Blood Glucose
     func fetchBloodGlucose() {
-        let glucoseType = HKObjectType.quantityType(forIdentifier: .bloodGlucose)!
-        let glucoseQuery = HKSampleQuery(sampleType: glucoseType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
-            guard let result = results?.first as? HKQuantitySample else { return }
-            let glucoseUnit = HKUnit(from: "mg/dL")
-            DispatchQueue.main.async {
-                self.bloodGlucose = result.quantity.doubleValue(for: glucoseUnit)
-            }
+//        let glucoseType = HKObjectType.quantityType(forIdentifier: .bloodGlucose)!
+//        let glucoseQuery = HKSampleQuery(sampleType: glucoseType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
+//            guard let result = results?.first as? HKQuantitySample else { return }
+//            let glucoseUnit = HKUnit(from: "mg/dL")
+//            DispatchQueue.main.async {
+//                self.bloodGlucose = result.quantity.doubleValue(for: glucoseUnit)
+//            }
+//        }
+//        healthStore.execute(glucoseQuery)
+        
+        let fakeBloodGlucose = 85.0
+        DispatchQueue.main.async {
+            self.bloodGlucose = fakeBloodGlucose
         }
-        healthStore.execute(glucoseQuery)
     }
     
     // Fetch Biological Sex

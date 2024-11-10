@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var dataSubmitted = false
     @StateObject private var healthKitManager = HealthKitManager()
     
     var body: some View {
@@ -62,6 +63,19 @@ struct ContentView: View {
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(10)
+                    
+                    Button(action: {
+                        // Action to submit data to Firestore
+                        healthKitManager.pushHealthDataToFirestore()
+                    }) {
+                        Text("Submit Data")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(10)
+                    }
+                    .padding()
                 }
                 .padding()
             }
