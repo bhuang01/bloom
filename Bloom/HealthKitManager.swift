@@ -131,10 +131,8 @@ class HealthKitManager: ObservableObject {
             "dateOfBirth": self.dateOfBirth?.description ?? "Unknown"
         ]
         
-        // Reference to the "HealthData" collection
+        // send to firestore db
 //        let healthDataRef = db.collection("HealthData").document(UUID().uuidString)
-        
-        // Set the health data to Firestore
 //        healthDataRef.setData(healthData) { error in
 //            if let error = error {
 //                print("Error adding health data to Firestore: \(error.localizedDescription)")
