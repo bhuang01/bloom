@@ -5,7 +5,6 @@
 //  Created by Bryan Huang on 11/10/24.
 //
 
-import FirebaseFirestore
 import Foundation
 import HealthKit
 
@@ -57,7 +56,7 @@ class HealthKitManager: ObservableObject {
     let healthStore = HKHealthStore()
     
     // Firestore database
-    let db = Firestore.firestore()
+//    let db = Firestore.firestore()
     
     @Published var isAuthorized = false
     @Published var heartRate: Double = 0
@@ -133,16 +132,16 @@ class HealthKitManager: ObservableObject {
         ]
         
         // Reference to the "HealthData" collection
-        let healthDataRef = db.collection("HealthData").document(UUID().uuidString)
+//        let healthDataRef = db.collection("HealthData").document(UUID().uuidString)
         
         // Set the health data to Firestore
-        healthDataRef.setData(healthData) { error in
-            if let error = error {
-                print("Error adding health data to Firestore: \(error.localizedDescription)")
-            } else {
-                print("Health data successfully added to Firestore!")
-            }
-        }
+//        healthDataRef.setData(healthData) { error in
+//            if let error = error {
+//                print("Error adding health data to Firestore: \(error.localizedDescription)")
+//            } else {
+//                print("Health data successfully added to Firestore!")
+//            }
+//        }
     }
     
     // Fetch the health data from HealthKit
@@ -284,25 +283,25 @@ class HealthKitManager: ObservableObject {
     func fetchBloodPressure() {
 //        let systolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic)!
 //        let diastolicType = HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)!
-//        
+//
 //        let systolicQuery = HKSampleQuery(sampleType: systolicType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
 //            guard let result = results?.first as? HKQuantitySample else { return }
 //            DispatchQueue.main.async {
 //                self.systolicBloodPressure = result.quantity.doubleValue(for: .millimeterOfMercury())
 //            }
 //        }
-//        
+//
 //        let diastolicQuery = HKSampleQuery(sampleType: diastolicType, predicate: nil, limit: 1, sortDescriptors: nil) { _, results, _ in
 //            guard let result = results?.first as? HKQuantitySample else { return }
 //            DispatchQueue.main.async {
 //                self.diastolicBloodPressure = result.quantity.doubleValue(for: .millimeterOfMercury())
 //            }
 //        }
-//        
+//
 //        healthStore.execute(systolicQuery)
 //        healthStore.execute(diastolicQuery)
         
-        let fakeSystolicBloodPressure = 120.0
+        let fakeSystolicBloodPressure = 121.0
         let fakeDiastolicBloodPressure = 80.0
         DispatchQueue.main.async {
             self.systolicBloodPressure = fakeSystolicBloodPressure

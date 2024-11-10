@@ -5,13 +5,13 @@
 //  Created by Bryan Huang on 11/9/24.
 //
 
-import Firebase
+//import FirebaseCore
 import SwiftUI
 
 @main
 struct BloomApp: App {
     init() {
-        FirebaseApp.configure()
+//        FirebaseApp.configure()
     }
     
     var body: some Scene {
